@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import '../data/games_data.dart';
+import '../games/game_2048_page.dart';
+import '../games/memory_match_page.dart';
+import '../games/minesweeper_page.dart';
+import '../games/snake_page.dart';
+import '../games/sudoku_page.dart';
+import '../games/tic_tac_toe_page.dart';
 import '../models/game_option.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/avatar_picker.dart';
@@ -18,7 +24,8 @@ class _HomePageState extends State<HomePage> {
   int _currentNavIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  String _username = '玩家';
+  final String _username = '玩家';
+  AvatarIcon? _avatarIcon;
 
   List<GameOption> get _filteredGames {
     if (_searchQuery.isEmpty) return gameOptions;
@@ -35,13 +42,38 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onStartGame(GameOption game) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('正在启动「${game.name}」...'),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 1),
-      ),
+    Widget page;
+    switch (game.name) {
+      case '井字棋':
+        page = const TicTacToePage();
+        break;
+      case '扫雷':
+        page = const MinesweeperPage();
+        break;
+      case '贪吃蛇':
+        page = const SnakePage();
+        break;
+      case '2048':
+        page = const Game2048Page();
+        break;
+      case '记忆翻牌':
+        page = const MemoryMatchPage();
+        break;
+      case '数独':
+        page = const SudokuPage();
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('「${game.name}」暂未实现'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => page),
     );
   }
 
@@ -164,7 +196,13 @@ class _HomePageState extends State<HomePage> {
         children: [
           UserHeader(
             username: _username,
-            onAvatarTap: () => AvatarPicker.show(context),
+            avatarIcon: _avatarIcon,
+            onAvatarTap: () async {
+              final result = await AvatarPicker.show(context);
+              if (result != null) {
+                setState(() => _avatarIcon = result);
+              }
+            },
           ),
           const SizedBox(height: 16),
           SearchBarWidget(

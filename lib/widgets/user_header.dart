@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'avatar_picker.dart';
 
 class UserHeader extends StatelessWidget {
   final String username;
+  final AvatarIcon? avatarIcon;
   final VoidCallback onAvatarTap;
 
   const UserHeader({
     super.key,
     required this.username,
+    this.avatarIcon,
     required this.onAvatarTap,
   });
 
@@ -20,12 +23,14 @@ class UserHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 28,
-                backgroundColor:
-                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                backgroundColor: (avatarIcon?.color ??
+                        Theme.of(context).colorScheme.primary)
+                    .withValues(alpha: 0.15),
                 child: Icon(
-                  Icons.person,
+                  avatarIcon?.icon ?? Icons.person,
                   size: 32,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: avatarIcon?.color ??
+                      Theme.of(context).colorScheme.primary,
                 ),
               ),
               Positioned(

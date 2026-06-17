@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class AvatarPicker extends StatelessWidget {
   const AvatarPicker({super.key});
 
-  static const List<_AvatarIcon> _avatarIcons = [
-    _AvatarIcon(Icons.pets, Color(0xFFFF6B6B)),
-    _AvatarIcon(Icons.face, Color(0xFF4ECDC4)),
-    _AvatarIcon(Icons.star, Color(0xFFFFA07A)),
-    _AvatarIcon(Icons.local_fire_department, Color(0xFF45B7D1)),
-    _AvatarIcon(Icons.rocket_launch, Color(0xFFDDA0DD)),
+  static const List<AvatarIcon> _avatarIcons = [
+    AvatarIcon(Icons.pets, Color(0xFFFF6B6B)),
+    AvatarIcon(Icons.face, Color(0xFF4ECDC4)),
+    AvatarIcon(Icons.star, Color(0xFFFFA07A)),
+    AvatarIcon(Icons.local_fire_department, Color(0xFF45B7D1)),
+    AvatarIcon(Icons.rocket_launch, Color(0xFFDDA0DD)),
   ];
 
-  static void show(BuildContext context) {
-    showModalBottomSheet(
+  static Future<AvatarIcon?> show(BuildContext context) {
+    return showModalBottomSheet<AvatarIcon>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -69,10 +69,10 @@ class AvatarPicker extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(BuildContext context, _AvatarIcon item) {
+  Widget _buildOption(BuildContext context, AvatarIcon item) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        Navigator.pop(context, item);
       },
       child: CircleAvatar(
         radius: 28,
@@ -83,9 +83,9 @@ class AvatarPicker extends StatelessWidget {
   }
 }
 
-class _AvatarIcon {
+class AvatarIcon {
   final IconData icon;
   final Color color;
 
-  const _AvatarIcon(this.icon, this.color);
+  const AvatarIcon(this.icon, this.color);
 }
